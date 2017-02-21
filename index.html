@@ -32,7 +32,10 @@
 				background-color: #DDD;
 				color: #000;
 			}
-			
+			pre code {
+			    background: #3f3f3f;
+				color: #dcdcdc;
+			}
 		</style>
 	</head>
 	<body>
@@ -59,6 +62,7 @@
 				<section>
 					<h2>Co-author</h3>
 					<p>Haskell</p>
+					<img src="images/haskell.jpg"/>
 				</section>
 				
 				<section>
@@ -104,7 +108,7 @@
 					<h2>What is NOT in FP</h2>
 					<p>Assignments</p>
 					<p>Side-effects</p>
-					<p>No flow of control</p>
+					<p>Flow of control</p>
 				</section>
 				
 				<section>
@@ -113,96 +117,96 @@
 				
 				<section>
 					<h2>The Cons List</h2>
-					<p>listof * ::= Nil | Cons * (listof *)</p>
+					<pre><code data-trim>listof * ::= Nil | Cons * (listof *)</code></pre>
 					<img src="images/cons-list.jpg"/>
-					<p><span class="">Cons 42 (Cons 69 (Cons 613 Nil ))</span></p>
+					<pre><code data-trim>Cons 42 (Cons 69 (Cons 613 Nil))</code></pre>
 				</section>
-				
-				<section>
-					<h2>Notation</h2>
-					<p>[42, 69, 613]</p>
-					<p>Nil is []</p>
-				</section>
-				
+
 				<section>
 					<h2>Summation Function</h2>
-					<p>sum Nil = 0</p>
-					<p>sum (Cons n list) = n + sum list</p>
+					<pre><code data-trim>sum Nil = 0
+sum (Cons n list) = n + sum list</code></pre>
 				</section>
 				
 				<section>
 					<h2>In general... foldr</h2>
 					
-					<p>(foldr f x) Nil = x</p>
-					<p>(foldr f x) (Cons a l) = f a ((foldr f x) l)</p>
+					<pre><code data-trim>(foldr f x) Nil = x
+(foldr f x) (Cons a l) = f a ((foldr f x) l)</code></pre>
 				</section>
 				
 				<section>
 					<h2>Modular!</h2>
 					
-					<p>product = foldr (*) 1</p>
-					<p>anytrue = foldr (V) False</p>
-					<p>alltrue = foldr (^) True</p>
+					<pre><code data-trim>product = foldr (*) 1</code></pre>
+					<pre><code data-trim>anytrue = foldr (V) False</code></pre>
+					<pre><code data-trim>alltrue = foldr (^) True</code></pre>
 				</section>
 				
 				<section>
 					<h2>Double Function</h2>
 					
-					<p>doubleall = foldr doubleandcons Nil</p>
-					<p>doubleandcons n list = Cons (2 * n) list</p>
+					<pre><code data-trim>doubleall = foldr doubleandcons Nil
+doubleandcons n list = Cons (2 * n) list</code></pre>
 				</section>
 				
 				<section>
 					<h2>Notation - Composition</h2>
-					<p>(f . g) h = f (g h)</p>
+					<pre><code data-trim>(f . g) h = f (g h)</code></pre>
 				</section>
 				
 				<section>
 					<h2>Generalizing... fandcons</h2>
 
-					<p>doubleandcons = fandcons double</p>
-					<p>double n = 2 * n</p>
-					<p>fandcons f el list = Cons (f el) list</p>
-					<p>or,</br>fandcons f = Cons . f</p>
+					<pre><code data-trim>doubleandcons = fandcons double
+double n = 2 * n
+fandcons f el list = Cons (f el) list</code></pre>
+					<p>or,</br>
+						<pre><code data-trim>fandcons f = Cons . f</code></pre>
+					</p>
 				</section>
 				
 				<section>
 					<h2>In general... map</h2>
 					
-					<p>doubleall = foldr (Cons . double) Nil</p>
-					<p>doubleall = map double</p>
+					<pre><code data-trim>doubleall = foldr (Cons . double) Nil
+doubleall = map double</code></pre>
 					<p>giving us:</p>
-					<p>map f = foldr (Cons . f) Nil</p>
+					<pre><code data-trim>map f = foldr (Cons . f) Nil</code></pre>
 				</section>
 				
 				<section>
 					<h2>Example of Map - Sum matrix</h2>
 					
-					<p>summatrix = sum . map sum</p>
+					<pre><code data-trim>summatrix = sum . map sum</code></pre>
 				</section>
 				
 				<section>
 					<h2>Not just lists... Trees!</h2>
-					<p>treeof * ::= Node * (listof (treeof *))</p>
+					<pre><code data-trim>treeof * ::= Node * (listof (treeof *))</code></pre>
 				</section>
 				
 				
 				<section>
 					<h2>foldtree</h2>
-					<p>foldtree f g a (Node label subtrees) = f label (foldtree f g a subtrees)</p>
-					<p>foldtree f g a (Cons subtree rest) = g (foldtree f g a subtree) (foldtree f g a rest)</p>
-					<p>foldtree f g a Nil = a</p>
+					<pre><code data-trim>foldtree f g a (Node label subtrees) =
+                         f label (foldtree f g a subtrees)
+			
+foldtree f g a (Cons subtree rest) =
+                         g (foldtree f g a subtree) (foldtree f g a rest)
+			
+foldtree f g a Nil = a</code></pre>
 				</section>
 				
 				<section>
 					<h2>Example - foldtree</h2>
-					<p>sumtree = foldtree (+) (+) 0</p>
+					<pre><code data-trim>sumtree = foldtree (+) (+) 0</code></pre>
 				</section>
 				
 				<section>
 					<h2>maptree</h2>
 					
-					<p>maptree f = foldtree (Node . f) Cons Nil</p>
+					<pre><code data-trim>maptree f = foldtree (Node . f) Cons Nil</code></pre>
 				</section>
 				
 				<section>
@@ -212,9 +216,15 @@
 				<section>
 					<h2>Compose programs</h2>
 					<p>f and g</p>
-					<p>(g . f) input</p>
-					<p>g (f input)</p>
+					<pre><code data-trim>(g . f) input</code></pre>
+					<pre><code data-trim>g (f input)</code></pre>
 					<p>What if f is non-terminating?</p>
+				</section>
+				
+				<section>
+					<h2>What if f is non-terminating?</h2>
+					<p>Procedural → Infinite loop :( </p>
+					<p>Functional → Lazy evaluation :D </p>
 				</section>
 				
 				<section>
@@ -225,32 +235,30 @@
 				<section>
 					<h2>Example - Newton-Raphson SQRT</h2>
 					
-					<p>a<sub><i>i+1</i></sub> = (a<sub><i>i</i></sub> + n/a<sub><i>i</i></sub>)/2</p>
+					<pre><code data-trim>a<sub><i>i+1</i></sub> = (a<sub><i>i</i></sub> + n/a<sub><i>i</i></sub>)/2</code></pre>
 					
-					<p>If approximations converge</p>
-					<p>a = sqrt(n)</p>
+					<p>If approximations converge,</p>
+					<pre><code data-trim>a = sqrt(n)</code></pre>
 				</section>
 				
 				<section>
 					<h2>Infinite sequence of approx.</h2>
-					<p>next n x = (x + n/x) / 2</p>
-					<p>repeat f a = Cons a (repeat f (f a))</p>
-					<p>repeat (next n) a0</p>
+					<pre><code data-trim>next n x = (x + n/x) / 2
+repeat f a = Cons a (repeat f (f a))
+repeat (next n) a0</code></pre>
 				</section>
 				
 				<section>
 					<h2>Filter the list of approx.</h2>
-					<div style="text-align:left;">
-					<p>within eps (Cons a (Cons b rest))<p>
-					<p> = b, <span style="float:right;font-weight:bold;"> if abs(a - b) &lt;= eps</span></p>
-					<p> = within eps (Cons b rest), <span style="float:right;font-weight:bold;">otherwise</span></p>
-					</div>
+					<pre><code data-trim>within eps (Cons a (Cons b rest))
+ = b,                             <span style="font-weight:bold;">if abs(a - b) &lt;= eps</span>
+ = within eps (Cons b rest),      <span style="font-weight:bold;">otherwise</span></code></pre>
 				</section>
 				
 				<section>
 					<h2>Compose them together</h2>
 					
-					<p>sqrt a0 eps n = within eps (repeat (next n) a0)</p>
+					<pre><code data-trim>sqrt a0 eps n = within eps (repeat (next n) a0)</code></pre>
 				</section>
 				
 				<section>
@@ -268,17 +276,18 @@
 				</section>
 				
 				<section>
+					<h2>Alpha-Beta - What is it?</h2>
+					<img src="images/alpha-beta.png"/>
+				</section>
+				
+				<section>
 					<h2>Alpha-Beta - Step 1</h2>
 					
-<pre>
-// Assume moves takes current state and returns all next states
+<pre><code data-trim>// Assume moves takes current state and returns all next states
 // Assume static takes a position and calculates a number
 
 reptree f a = Node a (map (reptree f) (f a))
 gametree p = reptree moves p
-
-maximize (Node n sub) = max (map minimize sub)
-minimize (Node n sub) = min (map maximize sub)
 
 maximize (Node n Nil) = n
 maximize (Node n sub) = max (map minimize sub)
@@ -287,79 +296,71 @@ minimize (Node n sub) = max (map maximize sub)
 
 // this doesn't work on infinite trees...
 evaluate = maximize . maptree static . gametree
-</pre>
+</code></pre>
 					</section>
 					
 					
 					<section>
 						<h2>Alpha-Beta - Step 2</h2>
-<pre>
-prune 0 (Node a x) = Node a Nil
+<pre><code data-trim>prune 0 (Node a x) = Node a Nil
 prune (n + 1) (Node a x) = Node a (map (prune n) x)
 
 // this will prune the search to depth 5
 evaluate = maximize . maptree static . prune 5 . gametree
-</pre>
+</code></pre>
 					</section>
 					
 					<section>
 						<h2>Alpha-Beta - Step 3</h2>
-<pre>
-//Suppose we refactor:
-//maximize = max . maximize'
-//minimize = min . minimize'
-
+<pre><code data-trim>//Suppose we refactor maximize and minimize:
 minleq Nil pot = False
 minleq (Cons n rest) pot = True,             if n &lt;= pot
                          = minleq rest pot,  otherwise
-
 omit pot Nil = Nil
 omit pot (Cons nums rest)
   = omit post rest,                          if minleq nums pot
   = Cons (min nums) (omit (min nums) rest),  otherwise
   
 mapmin (Cons nums rest) = Cons (min nums (omit (min nums) rest)
-
 maximize' (Node n Nil) = Cons n Nil
 maximize' (Node n l) = mapmin (map minimize' l)
 
 // This will ignore branches smaller than potential minima
 evaluate = max . maximize' . maptree static . prune 8 . gametree
-</pre>
+</code></pre>
 					</section>
 					
 					
 					<section>
 						<h2>Alpha-Beta - Step 4</h2>
-<pre>
-//Assume sort and not are defined.
+<pre><code data-trim>//Assume sort and not are defined.
 highfirst (Node n sub) = Node n (sort higher (map lowfirst sub))
 lowfirst (Node n sub) = Node n (sort (not . higher) (map highfirst sub))
 higher (Node n1 sub1)(Node n2 sub2) = n1 &gt; n2
 
 //This prioritizes branch expansion:
 evaluate = max . maximize' . highfirst . maptree static . prune 8 . gametree
-</pre>
+</code></pre>
 				</section>
 				
 				<section>
-					<h2>Conclusions by Hughes</h2>
+					<h2><img src="images/john-hughes.jpg" style="height:100px;margin-right: 15px;position: relative;top: 21px;"/>Conclusions by Hughes</h2>
 					<p>Modularity is key</p>
 					<p>Gluing solutions &gt; scope rules</p>
 				</section>
 				
 				<section>
-					<h2>Conclusions by Andrew</h2>
+					<h2>Conclusions by Andrew<img src="images/andrew.jpg" style="height:100px;margin-left: 15px;position: relative;top: 21px;"/></h2>
 					<p>Expressiveness</p>
 					<p>Easier to learn</p>
 				</section>
 				
 				<section>
 					<h2>Your turn!</h2>
-					<p>Haskell</p>
-					<p>Clojure</p>
-					<p>Elixir</p>
-					<p>F#</p>
+					<p>Haskell <img src="images/haskell-logo.png" style="height: 50px;background: #FFF;top: 30px;position: relative;"/></p>
+					<p>Clojure <img src="images/clojure-logo.png" style="height: 50px;background: #FFF;position: relative;top: 34px;"/></p>
+					<p>Elixir <img src="images/elixir-logo.jpg" style="height: 50px;background: #fff;position: relative;top: 30px;"/></p>
+					<p>F# <img src="images/fsharp-logo.png" style="height: 50px;background: #fff;position: relative;top: 30px;"/></p>
 				</section>
 				
 				<section>
@@ -392,8 +393,7 @@ evaluate = max . maximize' . highfirst . maptree static . prune 8 . gametree
 				dependencies: [
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+					{ src: 'plugin/notes/notes.js', async: true }
 					]
 			});
 		</script>
