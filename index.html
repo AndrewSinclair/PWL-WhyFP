@@ -1,0 +1,401 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Why Functional Programming Matters</title>
+
+		<meta name="description" content="PWL Winnipeg Meetup">
+		<meta name="author" content="Andrew Sinclair">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+		
+		<style>
+			.math-env {
+				background-color: #DDD;
+				color: #000;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h1>Why Functional Programming Matters</h1>
+					<p>
+						<small>Paper by John Hughes</small>
+					</p>
+					<p>
+						<small>
+							Presented by Andrew Sinclair
+						</small>
+					</p>
+				</section>
+				
+				<section>
+					<h2>Author</h2>
+					<p>John Hughes</p>
+					<img src="images/john-hughes.jpg"/>
+				</section>
+				
+				<section>
+					<h2>Co-author</h3>
+					<p>Haskell</p>
+				</section>
+				
+				<section>
+					<h2>Author</h2>
+					<p>QuickCheck</p>
+				</section>
+				
+				<section>
+					<h2>No Relation...</h2>
+					
+					<img src="images/john-hughes-director.jpg"/>
+					
+					<div class="fragment">
+					<img class="" src="images/ferris.jpg" style="margin-right: 100px;top: 320px;position: absolute;right: 0;">
+					<img class="" src="images/planes-trains-automobiles.jpg" style="right: 0;top: 117px;position: absolute;margin-right: 100px;">
+					</div>
+				</section>
+				
+				<section>
+					<h2>Why FP Matters?</h2>
+					<p>Structure</p>
+				</section>
+				
+				<section>
+					<h2>What is "Structured" software?</h2>
+					<p>Easy to write</p>
+					<p>Easy to debug</p>
+					<p>Reusable</p>
+				</section>
+				
+				<section>
+					<h2>Emphasis on Modularity</h2>
+					<img src="images/glue.jpg"/>
+				</section>
+				
+				<section>
+					<h2>Functional provides two glues:</h2>
+					<p>Higher-order functions</p>
+					<p>Lazy evaluation</p>
+				</section>
+				
+				<section>
+					<h2>What is NOT in FP</h2>
+					<p>Assignments</p>
+					<p>Side-effects</p>
+					<p>No flow of control</p>
+				</section>
+				
+				<section>
+					<h2>Glue #1 - Higher Order Functions</h2>
+				</section>
+				
+				<section>
+					<h2>The Cons List</h2>
+					<p>listof * ::= Nil | Cons * (listof *)</p>
+					<img src="images/cons-list.jpg"/>
+					<p><span class="">Cons 42 (Cons 69 (Cons 613 Nil ))</span></p>
+				</section>
+				
+				<section>
+					<h2>Notation</h2>
+					<p>[42, 69, 613]</p>
+					<p>Nil is []</p>
+				</section>
+				
+				<section>
+					<h2>Summation Function</h2>
+					<p>sum Nil = 0</p>
+					<p>sum (Cons n list) = n + sum list</p>
+				</section>
+				
+				<section>
+					<h2>In general... foldr</h2>
+					
+					<p>(foldr f x) Nil = x</p>
+					<p>(foldr f x) (Cons a l) = f a ((foldr f x) l)</p>
+				</section>
+				
+				<section>
+					<h2>Modular!</h2>
+					
+					<p>product = foldr (*) 1</p>
+					<p>anytrue = foldr (V) False</p>
+					<p>alltrue = foldr (^) True</p>
+				</section>
+				
+				<section>
+					<h2>Double Function</h2>
+					
+					<p>doubleall = foldr doubleandcons Nil</p>
+					<p>doubleandcons n list = Cons (2 * n) list</p>
+				</section>
+				
+				<section>
+					<h2>Notation - Composition</h2>
+					<p>(f . g) h = f (g h)</p>
+				</section>
+				
+				<section>
+					<h2>Generalizing... fandcons</h2>
+
+					<p>doubleandcons = fandcons double</p>
+					<p>double n = 2 * n</p>
+					<p>fandcons f el list = Cons (f el) list</p>
+					<p>or,</br>fandcons f = Cons . f</p>
+				</section>
+				
+				<section>
+					<h2>In general... map</h2>
+					
+					<p>doubleall = foldr (Cons . double) Nil</p>
+					<p>doubleall = map double</p>
+					<p>giving us:</p>
+					<p>map f = foldr (Cons . f) Nil</p>
+				</section>
+				
+				<section>
+					<h2>Example of Map - Sum matrix</h2>
+					
+					<p>summatrix = sum . map sum</p>
+				</section>
+				
+				<section>
+					<h2>Not just lists... Trees!</h2>
+					<p>treeof * ::= Node * (listof (treeof *))</p>
+				</section>
+				
+				
+				<section>
+					<h2>foldtree</h2>
+					<p>foldtree f g a (Node label subtrees) = f label (foldtree f g a subtrees)</p>
+					<p>foldtree f g a (Cons subtree rest) = g (foldtree f g a subtree) (foldtree f g a rest)</p>
+					<p>foldtree f g a Nil = a</p>
+				</section>
+				
+				<section>
+					<h2>Example - foldtree</h2>
+					<p>sumtree = foldtree (+) (+) 0</p>
+				</section>
+				
+				<section>
+					<h2>maptree</h2>
+					
+					<p>maptree f = foldtree (Node . f) Cons Nil</p>
+				</section>
+				
+				<section>
+					<h2>Glue #2 - Lazy evaluation</h2>
+				</section>
+				
+				<section>
+					<h2>Compose programs</h2>
+					<p>f and g</p>
+					<p>(g . f) input</p>
+					<p>g (f input)</p>
+					<p>What if f is non-terminating?</p>
+				</section>
+				
+				<section>
+					<h2>Is Lazy good for non-fp?</h2>
+					<p class="fragment">No, because side-effects</p>
+				</section>
+				
+				<section>
+					<h2>Example - Newton-Raphson SQRT</h2>
+					
+					<p>a<sub><i>i+1</i></sub> = (a<sub><i>i</i></sub> + n/a<sub><i>i</i></sub>)/2</p>
+					
+					<p>If approximations converge</p>
+					<p>a = sqrt(n)</p>
+				</section>
+				
+				<section>
+					<h2>Infinite sequence of approx.</h2>
+					<p>next n x = (x + n/x) / 2</p>
+					<p>repeat f a = Cons a (repeat f (f a))</p>
+					<p>repeat (next n) a0</p>
+				</section>
+				
+				<section>
+					<h2>Filter the list of approx.</h2>
+					<div style="text-align:left;">
+					<p>within eps (Cons a (Cons b rest))<p>
+					<p> = b, <span style="float:right;font-weight:bold;"> if abs(a - b) &lt;= eps</span></p>
+					<p> = within eps (Cons b rest), <span style="float:right;font-weight:bold;">otherwise</span></p>
+					</div>
+				</section>
+				
+				<section>
+					<h2>Compose them together</h2>
+					
+					<p>sqrt a0 eps n = within eps (repeat (next n) a0)</p>
+				</section>
+				
+				<section>
+					<h2>Additional Examples - Omitted</h2>
+					
+					<p>Numerical Differentiation</p>
+					<p>Numerical Integration</p>
+				</section>
+				
+				
+				<section>
+					<h2>Alpha-Beta Heuristic Algorithm</h2>
+					
+					<p>An example on refactoring</p>
+				</section>
+				
+				<section>
+					<h2>Alpha-Beta - Step 1</h2>
+					
+<pre>
+// Assume moves takes current state and returns all next states
+// Assume static takes a position and calculates a number
+
+reptree f a = Node a (map (reptree f) (f a))
+gametree p = reptree moves p
+
+maximize (Node n sub) = max (map minimize sub)
+minimize (Node n sub) = min (map maximize sub)
+
+maximize (Node n Nil) = n
+maximize (Node n sub) = max (map minimize sub)
+minimize (Node n Nil) = n
+minimize (Node n sub) = max (map maximize sub)
+
+// this doesn't work on infinite trees...
+evaluate = maximize . maptree static . gametree
+</pre>
+					</section>
+					
+					
+					<section>
+						<h2>Alpha-Beta - Step 2</h2>
+<pre>
+prune 0 (Node a x) = Node a Nil
+prune (n + 1) (Node a x) = Node a (map (prune n) x)
+
+// this will prune the search to depth 5
+evaluate = maximize . maptree static . prune 5 . gametree
+</pre>
+					</section>
+					
+					<section>
+						<h2>Alpha-Beta - Step 3</h2>
+<pre>
+//Suppose we refactor:
+//maximize = max . maximize'
+//minimize = min . minimize'
+
+minleq Nil pot = False
+minleq (Cons n rest) pot = True,             if n &lt;= pot
+                         = minleq rest pot,  otherwise
+
+omit pot Nil = Nil
+omit pot (Cons nums rest)
+  = omit post rest,                          if minleq nums pot
+  = Cons (min nums) (omit (min nums) rest),  otherwise
+  
+mapmin (Cons nums rest) = Cons (min nums (omit (min nums) rest)
+
+maximize' (Node n Nil) = Cons n Nil
+maximize' (Node n l) = mapmin (map minimize' l)
+
+// This will ignore branches smaller than potential minima
+evaluate = max . maximize' . maptree static . prune 8 . gametree
+</pre>
+					</section>
+					
+					
+					<section>
+						<h2>Alpha-Beta - Step 4</h2>
+<pre>
+//Assume sort and not are defined.
+highfirst (Node n sub) = Node n (sort higher (map lowfirst sub))
+lowfirst (Node n sub) = Node n (sort (not . higher) (map highfirst sub))
+higher (Node n1 sub1)(Node n2 sub2) = n1 &gt; n2
+
+//This prioritizes branch expansion:
+evaluate = max . maximize' . highfirst . maptree static . prune 8 . gametree
+</pre>
+				</section>
+				
+				<section>
+					<h2>Conclusions by Hughes</h2>
+					<p>Modularity is key</p>
+					<p>Gluing solutions &gt; scope rules</p>
+				</section>
+				
+				<section>
+					<h2>Conclusions by Andrew</h2>
+					<p>Expressiveness</p>
+					<p>Easier to learn</p>
+				</section>
+				
+				<section>
+					<h2>Your turn!</h2>
+					<p>Haskell</p>
+					<p>Clojure</p>
+					<p>Elixir</p>
+					<p>F#</p>
+				</section>
+				
+				<section>
+					<h2> You're still here? </h2>
+					<img src="images/go-home.gif"/>
+				</section>
+
+				<section>
+					<h2>Contact Info</h2>
+					
+					<ul>
+						<li>twitter: @Andy_CDandy</li>
+						<li>email: andrew.george.sinclair@gmail.com</li>
+						<li>github: <a href="https://github.com/AndrewSinclair">github.com/AndrewSinclair</a></li>
+					</ul>
+						
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+					]
+			});
+		</script>
+	</body>
+</html>
